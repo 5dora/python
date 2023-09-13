@@ -16,7 +16,7 @@ iris=data.load_iris()
 irdata=iris.data # 데이터
 irtgt=iris.target # 라벨링
 feature=iris.feature_names # 데이터 컬럼명
-tgtname = iris.target_names # 데
+tgtname = iris.target_names # 
 #%%
 print(irdata)
 print(irtgt)
@@ -41,21 +41,54 @@ df['tgt']=irtgt
 df
 # %%
 sns.pairplot(df, hue='tgt')
-# %%
-from sklearn.neighbors import KNeighborsClassifier
+#%%
 from sklearn.model_selection import train_test_split
-X_train, X_test, Y_train, Y_test = train_test_split(irdata, irtgt,test_size=0.3, shuffle=True, random_state=42)
+X_train, X_test, Y_train, Y_test = train_test_split(irdata, irtgt,test_size=0.3, shuffle=True, random_state=1)
 print(X_train.shape, X_test.shape)
+#%%
+######################## 최근접 이웃 ############################
+from sklearn.neighbors import KNeighborsClassifier
+# 하이퍼파라미터 튜닝
+for i in range(3,20,2):
+    print('knn: ', i)
+    knn3 = KNeighborsClassifier(n_neighbors=i) # 모델 저장하기
+    knn3.fit(X_train, Y_train) # 학습 시키기
+    pred=knn3.predict(X_test) #시험보기
+    print(pred) # 시험본답
+    print(Y_test) # 실제 답
+    from sklearn.metrics import accuracy_score # 정확도 계산하기
+    acc = accuracy_score(pred, Y_test)
+    print("점수[",i,"]: ", acc)
 # %%
-print(Y_train.shape,Y_test.shape)
+#################### 서포트 백터 머신 ########################
+from sklearn.svm import SVC
+for i in range(1,10):
+    svc = SVC(C=i)
+    svc.fit(X_train, Y_train)
+    pred= svc.predict(X_test)
+    print(pred)
+    print(Y_test)
+    acc=accuracy_score(pred, Y_test)
+    print('SVM[',i,'] acc: ', acc)
 # %%
-knn3 = KNeighborsClassifier(n_neighbors=3) # 모델 저장하기
-knn3.fit(X_train, Y_train) # 학습 시키기
-pred=knn3.predict(X_test) #시험보기
-print(pred) # 시험본답
-print(Y_test) # 실제 답
+############# 의사결정 나무 ##################
+from sklearn.tree import DecisionTreeClassifier as DT
+for j in range(2, 10):   
+    for i in range(2, 10):   
+        dt = DT(max_depth=i, min_samples_leaf=j)
+        dt.fit(X_train, Y_train)
+        pred=dt.predict(X_test)
+        print(pred)
+        print(Y_test)
+        acc = accuracy_score(pred, Y_test)
+        print('DT[',i,',',j,'] acc:', acc)
 # %%
-from sklearn.metrics import accuracy_score # 정확도 계산하기
-acc = accuracy_score(pred, Y_test)
-print("점수: ", acc)
-# %%
+############## 앙상블 모델 랜덤 포레스트 #############
+from sklearn.ensemble import RandomForestClassifier as RF
+rf=RF()
+rf.fit(X_train, Y_train)
+pred=dt.predict(X_test)
+print(pred)
+print(Y_test)
+acc=accuracy_score(pred, Y_test)
+print('RF[',i,'] acc: ', acc)
