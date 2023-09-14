@@ -63,4 +63,34 @@
         * 배깅과 부스팅
             - 배깅: 병렬처리
             - 부스팅: 순차처리
-            
+
+# 3. AUTOML
+- 평가지표
+    - 정확도(Accuracy) 일반적 성능에 대한 평가지표    
+    = $ (TP + TN) / (TP + FN + FP + TN) $    
+       
+         
+    |구분|예측: 거짓|예측: 참|
+    |--|:--:|:--:|
+    |실제: 거짓|TN|FP|
+    |실제: 참|FN|TP|
+
+    - 정밀도(Precision) : 모델이 True라고 예측한 것 중에서 실제 True인 것의 비율   
+    = $ TP / (FP+TP) $ 
+    - 재현율(Recall) : 실제 True인 것 중에서 모델이 True라고 예측한 것의 비율    
+    = $ TP / (FN+TP) $
+    - 정밀도와 재현율은 트레이드 오프관계에 있다.
+        - $ F1 Score = 2 * (정밀도 * 재현율) / (정밀도 + 재현율) $
+    - ROC_AUC커브 -> ROC_AUC_SCORE
+        - 모델의 적합성 평가
+
+- pycaret
+    1. 데이터셋 준비: setup()
+    2. 모델 성능 비교 및 모델 생성: compare_models(),create_model()
+    3. 모델 튜닝 및 블랜딩: tune_model(),blend_models()
+    4. 예측: predict_model()
+    5. 평가: check_metric()
+
+# 4. NLP
+    - 자연어처리
+    
